@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="category-table-block table-responsive-md">
+        <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+        <center>
+            <a href="/admin/categories/add">
+                <button type="button" class="btn btn-primary">Dodaj</button>
+            </a>
+        </center><br />
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" class="table-column-10">Lp.</th>
+                <th scope="col" class="table-column-70">Nazwa</th>
+                <th scope="col" class="table-column-20">Opcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="category : ${categories}">
+                <tr>
+                    <th scope="row" th:text="${#ids.seq('')}">...</th>
+                    <td th:text="${category.name}">...</td>
+                    <td>
+                        <a th:href="@{/admin/categories/edit/{categoryId}(categoryId=${category.id})}">
+                            <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Edytuj kategorie">
+                                <img src="../../../img/icon_edit.png" class="img-fluid edit-icon"/>
+                            </span>
+                        </a>
+
+                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Usuń kategorie">
+                                               <a data-toggle="modal" th:data-target="@{#modal{id}(id=${category.id})}">
+                                                        <img src="../../../img/icon_delete.png" class="img-fluid remove-icon"/>
+                                               </a>
+                                            </span>
+
+                        <div class="modal fade" th:id="@{modal{id}(id=${category.id})}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Usuwanie kategorii</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body"><center>
+                                        Czy na pewno chcesz usunąć kategorie: <br />
+                                        <th:b th:text="${category.name}">...</th:b>?<br />
+                                        <th:block th:with="numberArticles=${category.articlesSet.size()}">
+                                            <th:block th:text="@{Spowoduje to usunięcie {n} artykułu.(n=${numberArticles})}" th:if="${numberArticles} == 1">...</th:block>
+                                            <th:block th:text="@{Spowoduje to usunięcie {n} artykułów.(n=${numberArticles})}" th:if="${numberArticles} > 1">...</th:block>
+                                        </th:block>
+                                    </center></div>
+                                    <div class="modal-footer">
+                                        <a th:href="@{/admin/categories/remove/{categoryId}(categoryId=${category.id})}" >
+                                            <button type="button" class="btn btn-primary">Tak</button>
+                                        </a>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <th:block th:if="${#lists.isEmpty(categories)}">
+                <tbody>
+                    <tr>
+                        <td colspan="3"><center>Brak kategorii do wyświelenia.</center></td>
+                    </tr>
+                </tbody>
+            </th:block>
+        </table>
+    </div>
+</th:block>

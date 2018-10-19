@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo2}" th:text="${failureInfo2}">...</div>
+
+    <th:block th:unless="${failureInfo}">
+        <div class="starter-template">
+            <div class="jumbotron article-block">
+                <div class="display-4 article-title"> <span th:text="${userGroup.name}">...</span></div>
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Login</th>
+                                <th scope="col">Imie</th>
+                                <th scope="col">Nazwisko</th>
+                                <th scope="col">Grupa</th>
+                                <th scope="col">Opcje</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user, iter : ${users}">
+                                <td th:text="${user.username}">...</td>
+                                <td th:text="${user.firstName}">...</td>
+                                <td th:text="${user.lastName}">...</td>
+                                <td th:text="${user.userGroup.name}">...</td>
+                                <td>
+                                    <a th:href="@{/admin/usersgroups/{group}/{page}/allocate/{user}/{group}(user=${user.id}, group=${userGroup.id}, page=${currentPage})}"
+                                       th:unless="${user.userGroup.id} == ${userGroup.id}">
+                                        <img src="../../../../../../../img/icon_add_item.png" />
+                                    </a>
+                                    <a th:href="@{/admin/usersgroups/{currentGroup}/{page}/allocate/{user}/0 (user=${user.id}, currentGroup=${userGroup.id}, page=${currentPage})}"
+                                       th:if="${user.userGroup.id} == ${userGroup.id}">
+                                        <img src="../../../../../../../img/icon_remove_item.png" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                    <center>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <th:block th:with="result=${currentPage - 1}">
+                                <th:block th:if="${result} > 0">
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/admin/usersgroups/list/{userGroupId}/{pageNumber}(userGroupId=${userGroup.id}, pageNumber=${result})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Poprzedni</span>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </th:block>
+
+                            <th:block th:each="i : ${#numbers.sequence(1, numberPages)}">
+                                <li class="page-item">
+                                    <th:block th:if="${i} == ${currentPage}">
+                                        <a class="page-link" th:text="${i}" th:href="@{/admin/usersgroups/list/{userGroupId}/{pageNumber}(userGroupId=${userGroup.id}, pageNumber=${i})}">...</a>
+                                    </th:block>
+                                    <th:block th:unless="${i} == ${currentPage}">
+                                        <a class="page-link" th:text="${i}" th:href="@{/admin/usersgroups/list/{userGroupId}/{pageNumber}(userGroupId=${userGroup.id}, pageNumber=${i})}">...</a>
+                                    </th:block>
+                                </li>
+                            </th:block>
+                            <th:block th:with="result=${currentPage + 1}">
+                                <th:block th:if="${result} <= ${numberPages}">
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/admin/usersgroups/list/{userGroupId}/{pageNumber}(userGroupId=${userGroup.id}, pageNumber=${result})}"  aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Następny</span>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </th:block>
+                        </ul>
+                    </nav>
+                </center>
+            </div>
+        </div>
+
+        <div class="starter-template">
+            <div class="jumbotron article-block">
+                <div class="display-4 article-title"> Użytkownicy należący do grupy</div>
+                <div class="row">
+                    <div class="category-table-block table-responsive-md">
+                        <table class="table table-striped">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th scope="col">Lp.</th>
+                                    <th scope="col">Nazwa</th>
+                                    <th scope="col">Imie</th>
+                                    <th scope="col">Nazwisko</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user, iter : ${userGroup.users}">
+                                    <td th:text="${iter.count}">...</td>
+                                    <td th:text="${user.username}">...</td>
+                                    <td th:text="${user.firstName}">...</td>
+                                    <td th:text="${user.lastName}">...</td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(userGroup.users)}">
+                                    <td colspan="4"><center>Aktualnie do tej grupy nie należy żaden użytkownik.</center></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+        </div>
+    </th:block>
+
+</th:block>

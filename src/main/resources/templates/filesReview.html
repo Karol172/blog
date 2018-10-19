@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <center>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add">Przyślij</button>
+            <form action="/admin/files/add" method="POST" enctype="multipart/form-data" th:object="${fileForm}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="title-add" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="title-add">Dodawanie obrazka</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body"><center>
+                                <input type="file" th:field="*{image}" accept="image/*" />
+                                <input type="hidden" th:field="*{additionDate}" />
+                            </center></div>
+                            <div class="modal-footer">
+
+                                <button type="submit" class="btn btn-primary">Wyślij</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+    </center><br />
+    <div class="form-50 table-responsive">
+        <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+        <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+        <table class="table table-hover table-dark">
+            <tbody>
+            <th:tr th:if="${files} == null or ${#lists.isEmpty(files)}">
+                <td>
+                    <center>Jak dotąd nie przysłano obrazków.</center>
+                </td>
+            </th:tr>
+            <th:block th:unless="${files} == null or ${#lists.isEmpty(files)}" th:each="file, i : ${files}">
+                <tr>
+                    <td th:text="${i.count}">...</td>
+                    <td><center><div class="img-block">
+                        <img th:src="${file.link}" class="img-fluid" />
+                    </div></center></td>
+                    <td>
+                        <center>
+                            <a data-toggle="modal" th:data-target="@{#link_{id}(id=${file.id})}">
+                                <img src="../../../img/icon_arrow.png" class="img-fluid arrow-icon"/>
+                            </a>
+
+                            <div class="modal fade color-black" th:id="@{link_{id}(id=${file.id})}"
+                                 tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Link do obrazka</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body"><center>
+                                            <span class="color-black" th:text="${file.link}"></span>
+                                        </center></div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a data-toggle="modal" th:data-target="@{#remove_{id}(id=${file.id})}">
+                                <img src="../../../img/icon_delete.png" class="img-fluid remove-icon"/>
+                            </a>
+
+                                <div class="modal fade color-black" th:id="@{remove_{id}(id=${file.id})}"
+                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Usuwanie obrazka</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"><center>
+                                                Czy na pewno chcesz usunąć <b th:text="${file.fileName}"></b>?
+                                            </center></div>
+                                            <div class="modal-footer">
+                                                <a th:href="@{/admin/files/remove/{id}(id=${file.id})}">
+                                                    <button type="submit" class="btn btn-primary">Tak</button>
+                                                </a>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><br />
+                            <span th:text="${#temporals.format(file.additionDate, 'YYYY-MM-dd HH:mm:ss')}">...</span><br />
+                            <span><b>Dodane przez:</b> </span>
+                            <span th:if="${file.sender}" th:text="${file.sender.username}">...</span>
+                        </center>
+                    </td>
+                </tr>
+            </th:block>
+
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+
+

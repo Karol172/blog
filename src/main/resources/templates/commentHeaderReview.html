@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="category-table-block table-responsive-md">
+        <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+        <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+        <th:block th:unless="${failureInfo}">
+
+            <table class="table table-striped">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="table-column-10">Lp.</th>
+                    <th scope="col">Data</th>
+                    <th scope="col" class="table-column-50">Treść</th>
+                    <th scope="col" class="tabel-column-10">Autor</th>
+                    <th scope="col">Aktywny</th>
+                    <th scope="col" class="table-column-20">Opcje</th>
+                </tr>
+                </thead>
+                <tbody>
+                <th:block th:each="comment : ${headerComments}">
+                    <tr>
+                        <th scope="row" th:text="${#ids.seq('')}">...</th>
+                        <td th:text="${#temporals.format(comment.additionDate, 'yyyy-MM-dd HH:mm:ss')}">...</td>
+                        <td th:if="${#strings.length(comment.contents)} > 20">
+                            <span th:text="${#strings.substring(comment.contents, 0, 20)}"></span>...
+                        </td>
+                        <td th:unless="${#strings.length(comment.contents)} > 20" th:text="${comment.contents}">...</td>
+                        <td th:text="${comment.author}">...</td>
+                        <td th:if="${comment.active}">
+                            <a th:href="@{/admin/comments/{page}/active/{id}/0(id = ${comment.id}, page = ${currentPage})}">
+                                <img src="../../../../../img/icon_lock.png" class="img-fluid arrow-icon"/>
+                            </a>
+                        </td>
+                        <td th:unless="${comment.active}">
+                            <a th:href="@{/admin/comments/{page}/active/{id}/1(id = ${comment.id}, page = ${currentPage})}">
+                                <img src="../../../../../img/icon_unlock.png" class="img-fluid arrow-icon"/>
+                            </a>
+                        </td>
+                        <td>
+                            <center>
+                                <a data-toggle="modal" th:data-target="@{#review_{id}(id=${comment.id})}">
+                                    <img src="../../../../../img/icon_description.png" class="img-fluid arrow-icon"/>
+                                </a>
+
+                                <div class="modal fade color-black" th:id="@{review_{id}(id=${comment.id})}"
+                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Komentarz</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"><center>
+                                                <span class="color-black" th:text="${comment.contents}"></span>
+                                            </center></div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Zamknij</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a data-toggle="modal" th:data-target="@{#remove_{id}(id=${comment.id})}">
+                                    <img src="../../../../../img/icon_delete.png" class="img-fluid remove-icon"/>
+                                </a>
+
+                                <div class="modal fade color-black" th:id="@{remove_{id}(id=${comment.id})}"
+                                     tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Usuwanie komentarza</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"><center>
+                                                Czy na pewno chcesz usunąć ?<br /><b th:text="${comment.contents}"></b>
+                                            </center></div>
+                                            <div class="modal-footer">
+                                                <a th:href="@{/admin/comments/{page}/{articleId}/remove/{id}(id=${comment.id}, page=${currentPage}, articleId = ${comment.article.id})}">
+                                                    <button type="submit" class="btn btn-primary">Tak</button>
+                                                </a>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </td>
+                    </tr>
+                </th:block>
+                </tbody>
+                <th:block th:if="${#lists.isEmpty(headerComments)}">
+                    <tbody>
+                    <tr>
+                        <td colspan="6"><center>Brak komentarzy do wyświetlenia.</center></td>
+                    </tr>
+                    </tbody>
+                </th:block>
+            </table>
+            <th:block th:if="not ${#lists.isEmpty(headerComments)}">
+                <center>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <th:block th:with="result=${currentPage - 1}">
+                            <th:block th:if="${result} > 0">
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/admin/comments/article/{articleId}/{pageNumber}(articleId=${articleId}, pageNumber=${result})}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Poprzedni</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </th:block>
+
+                        <th:block th:each="i : ${#numbers.sequence(1, numberPages)}">
+                            <li class="page-item">
+                                <th:block th:if="${i} == ${currentPage}">
+                                    <a class="page-link" th:text="${i}" th:href="@{/admin/comments/article/{articleId}/{pageNumber}(articleId=${articleId}, pageNumber=${i})}">...</a>
+                                </th:block>
+                                <th:block th:unless="${i} == ${currentPage}">
+                                    <a class="page-link" th:text="${i}" th:href="@{/admin/comments/article/{articleId}/{pageNumber}(articleId=${articleId}, pageNumber=${i})}">...</a>
+                                </th:block>
+                            </li>
+                        </th:block>
+                        <th:block th:with="result=${currentPage + 1}">
+                            <th:block th:if="${result} <= ${numberPages}">
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/admin/comments/article/{articleId}/{pageNumber}(articleId=${articleId}, pageNumber=${result})}"  aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Następny</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </th:block>
+                    </ul>
+                </nav>
+                </center>
+            </th:block>
+        </th:block>
+    </div>
+</th:block>

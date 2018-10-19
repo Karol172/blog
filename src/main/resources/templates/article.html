@@ -1,0 +1,106 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+    <th:block th:if="${article} != null">
+        <div class="jumbotron article-block">
+            <div class="display-4 article-title" th:text="${article.title}"></div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="article-date" th:text="${#temporals.format(article.publicationDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                </div>
+                <div class="col-sm-10">
+                    <div class="article-category" th:text="${article.category.name}"></div>
+                </div>
+            </div>
+
+            <hr class="my-4 article-line">
+            <div class="article-authors">
+                <th:block th:each="author : ${article.authors}">
+                    <th:block th:if="${author.firstName} != null or ${author.lastName} != null" th:text="@{{fName} {lName} (fName=${author.firstName}, lName=${author.lastName})} ">... </th:block>
+                    <th:block th:unless="${author.firstName} != null or ${author.lastName} != null"th:text="@{{a}(a = ${author.username})}">... </th:block>
+                </th:block>
+            </div>
+            <div class="row">
+                <div class="article-contents cols" th:utext="${article.contents}">...</div>
+            </div>
+            <div class="row">
+                <div class="article-contents cols" th:utext="${article.contentsMore}">...</div>
+            </div>
+        </div>
+
+        <div class="jumbotron article-block" >
+            <center><h3>Komentarze</h3></center><br />
+                <th:block th:if="article.canComment">
+                    <div class="row form-80">
+                        <div class="col-lg-12">
+                            <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+                            <th:block th:if="${article.canComment}">
+                                <form action="/article/comment/add" method="POST" th:object="${commentForm}">
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                                    <th:block sec:authorize="not isAuthenticated()">
+                                        <div class="form-group">
+                                            <label for="authorInput">Autor:</label>
+                                            <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('author')}">
+                                                <ul>
+                                                    <li th:each="err : ${#fields.errors('author')}" th:text="${err}" />
+                                                </ul>
+                                            </div>
+                                            <input type="text" class="form-control" id="authorInput" th:field="*{author}" placeholder="Autor" />
+                                        </div>
+                                    </th:block>
+                                    <th:block sec:authorize="isAuthenticated()">
+                                        <input type="hidden" th:field="*{user}" />
+                                        <input type="hidden" name="author" th:value="test" />
+                                    </th:block>
+                                    <input type="hidden" th:field="*{additionDate}" />
+                                    <input type="hidden" th:field="*{id}" />
+                                        <input type="hidden" name="article" th:value="${article.id}" />
+                                    <div class="form-group">
+                                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('contents')}">
+                                            <ul>
+                                                <li th:each="err : ${#fields.errors('contents')}" th:text="${err}" />
+                                            </ul>
+                                        </div>
+                                        <textarea class="form-control" rows="3" th:field="*{contents}" ></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary" id="edit_button" >Dodaj</button>
+
+                                </form>
+                            </th:block>
+                        </div>
+                    </div>
+                    <br />
+                </th:block>
+            <div class="row form-80">
+                <center><div class="cols-lg-12">
+                    <th:block th:each="comment : ${comments}" th:if="${comment.active}">
+                        <div class="row comment">
+                            <div class="col-lg-12 article-category" >
+                                <span th:text="${comment.author}"></span>
+                                <th:block sec:authorize="isAuthenticated()">
+                                    <th:block th:if="${#authentication.getPrincipal().getUsername()} == ${comment.author}">
+                                        <a th:href="@{/article/comment/{id}(id=${comment.id})}">Edytuj</a>
+                                    </th:block>
+                                </th:block>
+                            </div>
+                            <div class="col-lg-12 comment-contents" th:utext="${comment.contents}">...</div>
+                        </div>
+                    </th:block>
+                </div></center>
+            </div>
+        </div>
+
+
+    </th:block>
+</th:block>
+
+
+

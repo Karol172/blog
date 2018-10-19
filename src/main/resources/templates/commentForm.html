@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+    <th:block sec:authorize="isAuthenticated()" th:if="${commentForm}">
+        <div class="form-50">
+            <form action="/article/comment/change" method="POST" th:object="${commentForm}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" th:field="*{user}" />
+                    <input type="hidden" name="author" th:value="test" />
+                <input type="hidden" th:field="*{additionDate}" />
+                <input type="hidden" th:field="*{id}" />
+                <input type="hidden" th:field="*{article}" />
+                <div class="form-group">
+                    <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('contents')}">
+                        <ul>
+                            <li th:each="err : ${#fields.errors('contents')}" th:text="${err}" />
+                        </ul>
+                    </div>
+                    <textarea class="form-control" rows="3" th:field="*{contents}" ></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="edit_button" >Edytuj</button>
+
+            </form>
+        </div>
+    </th:block>
+</th:block>
+
+
+

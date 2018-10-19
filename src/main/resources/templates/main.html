@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+
+    <th:block th:if="${numberPages} > 0">
+        <th:block th:each="article : ${articles}">
+        <div class="starter-template">
+            <div class="jumbotron article-block">
+                <div class="display-4 article-title" th:text="${article.title}"></div>
+                <div class="row">
+                    <div class="col-sm-2">
+                        <div class="article-date" th:text="${#temporals.format(article.publicationDate, 'yyyy-MM-dd HH:mm:ss')}"></div>
+                    </div>
+                    <div class="col-sm-10">
+                        <div class="article-category" th:text="${article.category.name}"></div>
+                    </div>
+                </div>
+
+                <hr class="my-4 article-line">
+                <div class="article-authors">
+                    <th:block th:each="author : ${article.authors}">
+                        <th:block th:if="${author.firstName} != null or ${author.lastName} != null" th:text="@{{fName} {lName} (fName=${author.firstName}, lName=${author.lastName})} ">... </th:block>
+                        <th:block th:unless="${author.firstName} != null or ${author.lastName} != null"th:text="@{{a}(a = ${author.username})}">... </th:block>
+                    </th:block>
+                </div>
+                <div class="row">
+                    <div class="article-contents cols" th:utext="${article.contents}">...</div>
+                </div>
+                <hr class="my-4 article-line ">
+                <div class="row">
+                    <div class="col article-comments">Komentarzy (<th:block th:text="${article.comments.size()}"></th:block>)</div>
+                    <div class="article-more col"><a th:href="@{/article/more/{id}(id=${article.id})}">Czytaj więcej</a></div>
+                </div>
+            </div>
+        </div>
+        </th:block>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <th:block th:with="result=${currentPage - 1}">
+                    <th:block th:if="${result} > 0">
+                        <li class="page-item">
+                            <a class="page-link" th:href="@{/pages/{pageNumber}(pageNumber=${result})}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Poprzedni</span>
+                            </a>
+                        </li>
+                    </th:block>
+                </th:block>
+
+                <th:block th:each="i : ${#numbers.sequence(1, numberPages)}">
+                    <li class="page-item">
+                        <th:block th:if="${i} == ${currentPage}">
+                            <a class="page-link" th:text="${i}" th:href="@{/pages/{pageNumber}(pageNumber=${i})}">...</a>
+                        </th:block>
+                        <th:block th:unless="${i} == ${currentPage}">
+                            <a class="page-link" th:text="${i}" th:href="@{/pages/{pageNumber}(pageNumber=${i})}">...</a>
+                        </th:block>
+                    </li>
+                </th:block>
+                <th:block th:with="result=${currentPage + 1}">
+                    <th:block th:if="${result} <= ${numberPages}">
+                            <li class="page-item">
+                                <a class="page-link" th:href="@{/pages/{pageNumber}(pageNumber=${result})}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                    <span class="sr-only">Następny</span>
+                                </a>
+                            </li>
+                    </th:block>
+                </th:block>
+            </ul>
+        </nav>
+    </th:block>
+    <center>
+        <th:block th:unless="${numberPages} > 0">
+            Brak artykułów do wyświetlania
+        </th:block>
+    </center>
+</th:block>
+
+
+

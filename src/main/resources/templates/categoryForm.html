@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="form-50">
+        <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+        <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+        <th:block th:if="${categoryForm}">
+                <form action="/admin/categories/try_add" th:object="${categoryForm}" method="POST" enctype="utf8">
+
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                    <input type="hidden" th:name="id" th:value="*{id}" />
+
+                    <div class="form-group">
+                        <label for="nameInput">Nazwa*:</label>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('name')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('name')}" th:text="${err}" />
+                            </ul>
+                        </div>
+                        <input type="text" class="form-control" id="nameInput" th:field="*{name}" placeholder="Nazwa" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="descriptionInput">Opis:</label>
+                        <div class="alert alert-danger" role="alert" th:if="${#fields.hasErrors('description')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('description')}" th:text="${err}" />
+                            </ul>
+                        </div>
+                        <textarea class="form-control" id="descriptionInput" th:field="*{description}" placeholder="Opis kategorii" rows="4">...</textarea>
+                    </div>
+
+                    <center><button type="submit" class="btn btn-primary">Dalej</button></center>
+                </form>
+        </th:block>
+    </div>
+</th:block>

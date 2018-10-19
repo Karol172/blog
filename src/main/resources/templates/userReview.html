@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+    <th:block th:if="${user}">
+        <div class="starter-template">
+            <div class="jumbotron article-block">
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Login</th>
+                            <th scope="col">Imie</th>
+                            <th scope="col">Nazwisko</th>
+                            <th scope="col">Grupa</th>
+                            <th scope="col">Imie</th>
+                            <th scope="col">Nazwisko</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td th:text="${user.username}">...</td>
+                            <td th:text="${user.firstName}">...</td>
+                            <td th:text="${user.lastName}">...</td>
+                            <td th:text="${user.userGroup.name}">.</td>
+                            <td th:text="${user.firstName}">...</td>
+                            <td th:text="${user.lastName}">...</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col" class="table-column-10">Lp.</th>
+                        <th scope="col" class="table-column-40">Tytuł</th>
+                        <th scope="col" class="table-column-20">Data dodania</th>
+                        <th scope="col" class="table-column-10">Aktywny</th>
+                        <th scope="col" class="table-column-20">Opcje</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <th:block th:each="article, iteration: ${articles}">
+                        <tr>
+                            <th scope="row" th:text="${iteration.count}">...</th>
+                            <td th:text="${article.title}">...</td>
+                            <td th:text="${#temporals.format(article.additionDate, 'dd-MM-yyyy HH:mm:ss')}"></td>
+                            <td th:if="${article.active} and ${article.publicationDate.isBefore(#temporals.createNow())}">Tak</td>
+                            <td th:unless="${article.active} and ${article.publicationDate.isBefore(#temporals.createNow())}">Nie</td>
+                            <td>
+                                <a th:href="@{/article/more/{id}(id=${article.id})}">
+                                                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Podglądnij artykuł">
+                                                    <img src="../../../img/icon_description.png" class="img-fluid edit-icon"/>
+                                                </span>
+                                </a>
+                            </td>
+                        </tr>
+
+                    </th:block>
+                    <th:block th:if="${articles.size()} == 0">
+                        <tr>
+                            <td colspan="5"><center>Brak artykułów do wyświelenia.</center></td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+</th:block>

@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="category-table-block table-responsive-md">
+        <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+        <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+        <table class="table table-striped">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" class="table-column-10">Lp.</th>
+                <th scope="col" class="table-column-70">Tytuł</th>
+                <th scope="col" class="table-column-20">Opcje</th>
+            </tr>
+            </thead>
+            <tbody>
+            <th:block th:each="article : ${headerArticle}">
+                <tr>
+                    <th scope="row" th:text="${#ids.seq('')}">...</th>
+                    <td th:text="${article.title}">...</td>
+                    <td>
+                        <a th:href="@{/admin/comments/article/{id}/1(id=${article.id})}">
+                            <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="Komentarze">
+                                <img src="../../../img/icon_comments.png" class="img-fluid edit-icon"/>
+                            </span>
+                        </a>
+                    </td>
+                </tr>
+            </th:block>
+            </tbody>
+            <th:block th:if="${#lists.isEmpty(headerArticle)}">
+                <tbody>
+                <tr>
+                    <td colspan="3"><center>Brak artykułów do wyświetlenia.</center></td>
+                </tr>
+                </tbody>
+            </th:block>
+        </table>
+        <th:block th:if="not ${#lists.isEmpty(headerArticle)}">
+            <center>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <th:block th:with="result=${currentPage - 1}">
+                            <th:block th:if="${result} > 0">
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/admin/comments/{pageNumber}(pageNumber=${result})}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Poprzedni</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </th:block>
+
+                        <th:block th:each="i : ${#numbers.sequence(1, numberPages)}">
+                            <li class="page-item">
+                                <th:block th:if="${i} == ${currentPage}">
+                                    <a class="page-link" th:text="${i}" th:href="@{/admin/comments/{pageNumber}(pageNumber=${i})}">...</a>
+                                </th:block>
+                                <th:block th:unless="${i} == ${currentPage}">
+                                    <a class="page-link" th:text="${i}" th:href="@{/admin/comments/{pageNumber}(pageNumber=${i})}">...</a>
+                                </th:block>
+                            </li>
+                        </th:block>
+                        <th:block th:with="result=${currentPage + 1}">
+                            <th:block th:if="${result} <= ${numberPages}">
+                                <li class="page-item">
+                                    <a class="page-link" th:href="@{/admin/comments/{pageNumber}(pageNumber=${result})}"  aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Następny</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </th:block>
+                    </ul>
+                </nav>
+            </center>
+        </th:block>
+    </div>
+</th:block>

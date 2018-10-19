@@ -1,0 +1,117 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{base}">
+
+<th:block layout:fragment="content">
+    <div class="alert alert-success" role="alert" th:if="${successInfo}" th:text="${successInfo}">...</div>
+    <div class="alert alert-danger" role="alert" th:if="${failureInfo}" th:text="${failureInfo}">...</div>
+
+        <div class="starter-template">
+            <div class="jumbotron article-block">
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Login</th>
+                            <th scope="col">Imie</th>
+                            <th scope="col">Nazwisko</th>
+                            <th scope="col">Grupa</th>
+                            <th scope="col">Opcje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user, iter : ${users}">
+                            <td th:text="${user.username}">...</td>
+                            <td th:text="${user.firstName}">...</td>
+                            <td th:text="${user.lastName}">...</td>
+                            <td th:text="${user.userGroup.name}">...</td>
+                            <td>
+                                <th:block th:if="${user.activationAccount.dateActivation}">
+                                    <a th:href="@{/admin/users/{page}/status/{userId}/0(page=${currentPage}, userId=${user.id})}"
+                                       th:if="${user.active}">
+                                        <img src="../../../../../../../img/icon_lock.png" />
+                                    </a>
+                                    <a th:href="@{/admin/users/{page}/status/{userId}/1(page=${currentPage}, userId=${user.id})}"
+                                       th:if="not ${user.active}">
+                                        <img src="../../../../../../../img/icon_unlock.png" />
+                                    </a>
+                                </th:block>
+                                    <a th:href="@{/admin/users/review/{id}(id=${user.id})}">
+                                        <img src="../../../../../../../img/icon_description.png" />
+                                    </a>
+
+                                    <a data-toggle="modal" th:data-target="@{#modal{id}(id=${user.id})}">
+                                        <img src="../../../../../../../img/icon_delete.png" />
+                                    </a>
+
+                                <div class="modal fade" th:id="@{modal{id}(id=${user.id})}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Usuwanie użytkownika</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"><center>
+                                                Czy na pewno chcesz usunąć użytkownika: <br />
+                                                <th:b th:text="${user.username}">...</th:b>?<br />
+                                            </center></div>
+                                            <div class="modal-footer">
+                                                <a th:href="@{/admin/users/remove/{id}/{page}(id=${user.id}, page=${currentPage})}" >
+                                                    <button type="button" class="btn btn-primary">Tak</button>
+                                                </a>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Nie</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <center>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <th:block th:with="result=${currentPage - 1}">
+                                <th:block th:if="${result} > 0">
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/admin/users/{pageNumber}(pageNumber=${result})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Poprzedni</span>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </th:block>
+
+                            <th:block th:each="i : ${#numbers.sequence(1, numberPages)}">
+                                <li class="page-item">
+                                    <th:block th:if="${i} == ${currentPage}">
+                                        <a class="page-link" th:text="${i}" th:href="@{/admin/users/{pageNumber}(pageNumber=${i})}">...</a>
+                                    </th:block>
+                                    <th:block th:unless="${i} == ${currentPage}">
+                                        <a class="page-link" th:text="${i}" th:href="@{/admin/users/{pageNumber}(pageNumber=${i})}">...</a>
+                                    </th:block>
+                                </li>
+                            </th:block>
+                            <th:block th:with="result=${currentPage + 1}">
+                                <th:block th:if="${result} <= ${numberPages}">
+                                    <li class="page-item">
+                                        <a class="page-link" th:href="@{/admin/users/{pageNumber}(pageNumber=${result})}"  aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Następny</span>
+                                        </a>
+                                    </li>
+                                </th:block>
+                            </th:block>
+                        </ul>
+                    </nav>
+                </center>
+            </div>
+        </div>
+
+</th:block>
