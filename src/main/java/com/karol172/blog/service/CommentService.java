@@ -65,7 +65,6 @@ public class CommentService {
             model.addAttribute("numberPages", commentsPageNumber);
             model.addAttribute("headerComments", commentList);
             model.addAttribute("articleId", articleId);
-
         }
         else
             model.addAttribute("failureInfo", "Nie znaleziono artykułu.");

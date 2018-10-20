@@ -8,34 +8,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class MainPageController
-{
+public class MainPageController {
+
   @Autowired
   private DataPageService dataPageService;
+
   @Autowired
   private ArticlesService articlesService;
   
-  @RequestMapping(value={"/"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
-  public String mainPage(Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/", method=RequestMethod.GET)
+  public String mainPage(Model model, HttpServletRequest request) {
     this.dataPageService.getDataPage(model, request);
     this.articlesService.getAllArticles(model, 1);
     return "main";
   }
   
-  @RequestMapping(value={"/pages/{pageNumber}"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
-  public String mainPage(@PathVariable(name="pageNumber") int pageNumber, Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/pages/{pageNumber}", method=RequestMethod.GET)
+  public String mainPage(@PathVariable(name="pageNumber") int pageNumber, Model model, HttpServletRequest request){
     this.dataPageService.getDataPage(model, request);
     this.articlesService.getAllArticles(model, pageNumber);
     return "main";
   }
   
-  @RequestMapping(value={"/403"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
-  public String error403(Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/403", method=RequestMethod.GET)
+  public String error403(Model model, HttpServletRequest request) {
     this.dataPageService.getDataPage(model, request);
     this.dataPageService.get403(model);
     return "message";

@@ -28,7 +28,6 @@ public class ArticlesService {
     private CategoryRepository categoryRepository;
 
     @Autowired
-    @Qualifier("appConfiguration")
     private AppConfiguration appConfiguration;
 
     public void getArticlesOfCategory (Model model, long categoryId, int pageNumber) {

@@ -9,17 +9,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class AppConfig
-{
-    @Bean(name={"passwordEncoder"})
-    public PasswordEncoder getBCryptPasswordEncoder()
-    {
+public class AppConfig {
+
+    @Bean(name="passwordEncoder")
+    public PasswordEncoder getBCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean(name={"mailSender"})
-    public JavaMailSender getJavaMailSender()
-    {
+    @Bean(name="mailSender")
+    public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.wp.pl");
         mailSender.setPort(465);
@@ -35,5 +33,10 @@ public class AppConfig
         props.put("mail.smtps.ssl.checkserveridentity", "true");
 
         return mailSender;
+    }
+
+    @Bean(name="configuration")
+    public AppConfiguration getAppConfiguration () {
+        return new AppConfiguration(10,"1");
     }
 }

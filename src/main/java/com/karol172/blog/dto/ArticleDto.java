@@ -51,8 +51,7 @@ public class ArticleDto implements Serializable, Comparable {
 
     private List<CommentDto> comments = new ArrayList<>();
 
-    public ArticleDto() {
-    }
+    public ArticleDto() { }
 
     public ArticleDto(Article article) {
         this.id = article.getId();

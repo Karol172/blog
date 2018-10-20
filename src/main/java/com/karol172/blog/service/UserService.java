@@ -91,7 +91,8 @@ public class UserService {
         if (userGroupForm.getId() == null && userGroupRepository.findFirstByName(userGroupForm.getName()) != null)
             result.rejectValue("name", "userGroup", "Taka grupa użytkowników już istnieje.");
         else if (userGroupForm.getId() != null) {
-            if (userGroupById != null && !userGroupById.getName().equals(userGroupForm.getName()) && userGroupRepository.findFirstByName(userGroupForm.getName()) != null)
+            if (userGroupById != null && !userGroupById.getName().equals(userGroupForm.getName())
+                    && userGroupRepository.findFirstByName(userGroupForm.getName()) != null)
                 result.rejectValue("name", "userGroup", "Taka grupa użytkowników już istnieje.");
             else if (userGroupById == null) {
                 model.addAttribute("failureInfo", "Nie znaleziono grupy");
@@ -194,9 +195,8 @@ public class UserService {
         User user = userRepository.findFirstById(userId);
         if (user != null && user.getActivationAccount() != null
                 && user.getActivationAccount().getDateActivation() != null) {
-            if (user.getUserGroup().getName().equals("Administratorzy") && user.getUserGroup().getUsers().size() == 1) {
+            if (user.getUserGroup().getName().equals("Administratorzy") && user.getUserGroup().getUsers().size() == 1)
                 model.addAttribute("failureInfo", "Nie można usunąć ostatniego administratora");
-            }
             else if (user.getUsername().equals(request.getRemoteUser()))
                 model.addAttribute("failureInfo", "Nie możesz usunąć swojego konta.");
             else {
@@ -215,9 +215,9 @@ public class UserService {
                     fileRepository.save(f);
                 });
                 userRepository.deleteById(user.getId());
+                model.addAttribute("successInfo", "Pomyślnie usunięto użytkownika");
             }
             getUsers(page, model);
-            model.addAttribute("successInfo", "Pomyślnie usunięto użytkownika");
         }
     }
 

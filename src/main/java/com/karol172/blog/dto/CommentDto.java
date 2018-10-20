@@ -32,8 +32,7 @@ public class CommentDto implements Serializable, Comparable {
 
     private UserDto authorUser;
 
-    public CommentDto() {
-    }
+    public CommentDto() { }
 
     public CommentDto(Comment comment) {
         id = comment.getId();
@@ -47,8 +46,6 @@ public class CommentDto implements Serializable, Comparable {
                 article.getCategory().getName(), article.getCategory().getDescription()));
         authorUser = new UserDto(comment.getAuthorUser());
     }
-
-
 
     public Long getId() {
         return id;

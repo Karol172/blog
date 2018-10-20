@@ -33,10 +33,7 @@ public class DataPageService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    @Qualifier("appConfiguration")
     private AppConfiguration appConfiguration;
-
 
     public void getDataPage(Model model, HttpServletRequest request) {
 
@@ -89,7 +86,7 @@ public class DataPageService {
         List<LinkDto> linkDtoList = new ArrayList<>();
         if (user.hasPermission("Artykuły")) {
             linkDtoList.add(new LinkDto("/admin/articles", "Przeglądaj"));
-            linkDtoList.add(new LinkDto("/admin/article/add", "Dodaj"));
+            linkDtoList.add(new LinkDto("/admin/articles/add", "Dodaj"));
         }
         if (user.hasPermission("Kategorie"))
             linkDtoList.add(new LinkDto("/admin/categories", "Kategorie"));
@@ -118,5 +115,6 @@ public class DataPageService {
         categoryRepository.findByOrderByNameAsc().forEach(k->categoryDtoList.add(new CategoryDto(k)));
         return categoryDtoList;
     }
+
 
 }

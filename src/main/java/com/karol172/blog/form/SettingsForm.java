@@ -2,10 +2,12 @@ package com.karol172.blog.form;
 
 import com.karol172.blog.configuration.AppConfiguration;
 
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 public class SettingsForm implements Serializable {
 
+    @Min(value = 1, message = "Wartość musi być liczbą całkowitą dodatnią")
     private int articlesPerPage;
 
     private String titlePage;

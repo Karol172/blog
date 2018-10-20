@@ -1,84 +1,74 @@
 package com.karol172.blog.model;
 
+import java.util.HashSet;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
+import java.util.Set;
+import javax.persistence.*;
 
 @Entity
-public class UserGroup
-{
+public class UserGroup {
+
   @Id
   @GeneratedValue
   private Long id;
+
   @Column(nullable=false, unique=true)
   private String name;
+
   private String description;
+
   @ManyToMany
-  @JoinTable(name="perrmissions_group", joinColumns={@javax.persistence.JoinColumn(name="permission_id", referencedColumnName="id")}, inverseJoinColumns={@javax.persistence.JoinColumn(name="user_group_id", referencedColumnName="id")})
-  private List<Permission> permissions;
-  @OneToMany(mappedBy="userGroup", cascade={javax.persistence.CascadeType.MERGE, javax.persistence.CascadeType.PERSIST})
-  private List<User> users;
+  @JoinTable(name="perrmissions_group", joinColumns={@JoinColumn(name="permission_id", referencedColumnName="id")},
+          inverseJoinColumns={@JoinColumn(name="user_group_id", referencedColumnName="id")})
+  private Set<Permission> permissions = new HashSet<>();
+
+  @OneToMany(mappedBy="userGroup", cascade={CascadeType.MERGE, CascadeType.PERSIST})
+  private Set<User> users = new HashSet<>();
   
   public UserGroup() {}
   
-  public UserGroup(String name, String description)
-  {
+  public UserGroup(String name, String description) {
     this.name = name;
     this.description = description;
   }
   
-  public Long getId()
-  {
+  public Long getId() {
     return this.id;
   }
   
-  public void setId(Long id)
-  {
+  public void setId(Long id) {
     this.id = id;
   }
   
-  public String getName()
-  {
+  public String getName() {
     return this.name;
   }
   
-  public void setName(String name)
-  {
+  public void setName(String name) {
     this.name = name;
   }
   
-  public String getDescription()
-  {
+  public String getDescription() {
     return this.description;
   }
   
-  public void setDescription(String description)
-  {
+  public void setDescription(String description) {
     this.description = description;
   }
   
-  public List<Permission> getPermissions()
-  {
+  public Set<Permission> getPermissions() {
     return this.permissions;
   }
   
-  public void setPermissions(List<Permission> permissions)
-  {
+  public void setPermissions(Set<Permission> permissions) {
     this.permissions = permissions;
   }
   
-  public List<User> getUsers()
-  {
+  public Set<User> getUsers() {
     return this.users;
   }
   
-  public void setUsers(List<User> users)
-  {
+  public void setUsers(Set<User> users) {
     this.users = users;
   }
 
@@ -88,6 +78,15 @@ public class UserGroup
         this.permissions.add(permission);
       if (!permission.getUserGroups().contains(this))
         permission.addUserGroup(this);
+    }
+  }
+
+  public void removePermission (Permission permission) {
+    if (permission != null) {
+      if (this.permissions.contains(permission))
+        this.permissions.remove(permission);
+      if (permission.getUserGroups().contains(this))
+        permission.removeUserGroup(this);
     }
   }
 }

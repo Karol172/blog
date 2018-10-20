@@ -40,6 +40,7 @@ public class App {
 
             UserGroup admin = new UserGroup("Administratorzy", "This group contains users who are admin");
             userGroupRepository.save(admin);
+
             permissionRepository.findAll().forEach(p->admin.addPermission(p));
             userGroupRepository.save(admin);
 
@@ -149,6 +150,7 @@ public class App {
         };
     }
     // Settings Managment
+
     // TODO: Setting's form : checking if user is still blocked
     // Injection and write t xml
     // TODO: CommandLine to .sql

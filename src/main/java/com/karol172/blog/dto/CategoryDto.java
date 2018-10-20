@@ -21,8 +21,7 @@ public class CategoryDto implements Serializable {
 
     private Set<ArticleDto> articlesSet = new HashSet<>();
 
-    public CategoryDto() {
-    }
+    public CategoryDto() { }
 
     public CategoryDto(long id, String name, String description) {
         this.id = id;

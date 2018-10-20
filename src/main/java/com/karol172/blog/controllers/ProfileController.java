@@ -12,42 +12,42 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class ProfileController
-{
+public class ProfileController {
+
   @Autowired
   private ProfileService profileService;
+
   @Autowired
   private DataPageService dataPageService;
   
-  @RequestMapping(value={"/user/profile"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
-  public String profileForm(Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/user/profile", method= RequestMethod.GET)
+  public String profileForm(Model model, HttpServletRequest request) {
     this.profileService.getProfileForm(model, request);
     this.dataPageService.getDataPage(model, request);
     return "profileForm";
   }
   
-  @RequestMapping(value={"/user/profile/edit"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-  public String editProfile(@ModelAttribute("profileForm") ProfileForm profileForm, BindingResult result, Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/user/profile/edit", method=RequestMethod.POST)
+  public String editProfile(@ModelAttribute("profileForm") ProfileForm profileForm, BindingResult result,
+                            Model model, HttpServletRequest request) {
     this.profileService.editUserDetails(model, result, profileForm);
     this.dataPageService.getDataPage(model, request);
     return "profileForm";
   }
   
-  @RequestMapping(value={"/user/password"}, method={org.springframework.web.bind.annotation.RequestMethod.GET})
-  public String changePasswordForm(Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/user/password", method=RequestMethod.GET)
+  public String changePasswordForm(Model model, HttpServletRequest request) {
     this.profileService.getChangePasswordUserForm(model);
     this.dataPageService.getDataPage(model, request);
     return "changePasswordAsUserForm";
   }
   
-  @RequestMapping(value={"/user/password/change"}, method={org.springframework.web.bind.annotation.RequestMethod.POST})
-  public String changePassword(@ModelAttribute("changePasswordUserForm") @Valid ChangePasswordAsUserForm changePasswordAsUserForm, BindingResult result, Model model, HttpServletRequest request)
-  {
+  @RequestMapping(value="/user/password/change", method=RequestMethod.POST)
+  public String changePassword(@ModelAttribute("changePasswordUserForm") @Valid ChangePasswordAsUserForm changePasswordAsUserForm,
+                               BindingResult result, Model model, HttpServletRequest request) {
     this.profileService.tryChangePassword(changePasswordAsUserForm, model, result, request);
     this.dataPageService.getDataPage(model, request);
     return "changePasswordAsUserForm";

@@ -9,6 +9,11 @@ public class AppConfiguration {
 
     public AppConfiguration () { }
 
+    public AppConfiguration (int articlesPerPage, String titlePage) {
+        this.articlesPerPage = articlesPerPage;
+        this.titlePage = titlePage;
+    }
+
     public int getArticlesPerPage() {
         return articlesPerPage;
     }
