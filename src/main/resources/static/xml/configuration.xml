@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<configuration>
-    <articlesPerPage>11</articlesPerPage>
-    <titlePage>blog</titlePage>
-</configuration>
+<?xml version="1.0" encoding="UTF-8"?>
+<configurations>
+    <configuration>
+        <articlesPerPage>10</articlesPerPage>
+        <titlePage>Blog</titlePage>
+    </configuration>
+</configurations>

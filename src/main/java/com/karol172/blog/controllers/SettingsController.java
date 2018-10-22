@@ -29,8 +29,8 @@ public class SettingsController {
     @RequestMapping(value = "/admin/settings/edit", method = RequestMethod.POST)
     public String changeSettings (@ModelAttribute("settingsForm") @Valid SettingsForm settingsForm, BindingResult result,
                                   Model model, HttpServletRequest request) {
-        dataPageService.getDataPage(model, request);
         dataPageService.editSettings(model, result, settingsForm);
+        dataPageService.getDataPage(model, request);
         return "settingsForm";
     }
 }

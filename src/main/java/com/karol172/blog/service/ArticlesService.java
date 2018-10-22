@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ArticlesService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Autowired
+    @Resource(name = "configuration")
     private AppConfiguration appConfiguration;
 
     public void getArticlesOfCategory (Model model, long categoryId, int pageNumber) {

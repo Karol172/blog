@@ -30,6 +30,7 @@ public class App {
                                    CommentRepository commentRepository,
                                    ActivationAccountRepository activationAccountRepository) {
         return (args) -> {
+
             permissionRepository.save(new Permission("Artykuły", null));
             permissionRepository.save(new Permission("Kategorie", null));
             permissionRepository.save(new Permission("Pliki", null));
@@ -94,46 +95,11 @@ public class App {
                     LocalDateTime.now(), LocalDateTime.now().minusYears(8),
                     true, true, categoryRepository.findByOrderByNameAsc().get(0));
 
-            Article article6 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article7 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article8 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article9 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article10 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article11 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
-            Article article12 = new Article("Tytuł123", "Treść treścią2", null,
-                    LocalDateTime.now(), LocalDateTime.now().minusYears(8),
-                    true, true, categoryRepository.findByOrderByNameAsc().get(0));
-
             repository.save(article);
             repository.save(article2);
             repository.save(article3);
             repository.save(article4);
             repository.save(article5);
-            repository.save(article6);
-            repository.save(article7);
-            repository.save(article8);
-            repository.save(article9);
-            repository.save(article10);
-            repository.save(article11);
-            repository.save(article12);
 
             article.addAuthor(user);
 
@@ -142,16 +108,10 @@ public class App {
             article2.addAuthor(user2);
             repository.save(article2);
 
-            commentRepository.save(new Comment("ale fajnie", LocalDateTime.now(), true, user2, article));
-            commentRepository.save(new Comment("ale fajnie fajnie bardzo fajnie to", LocalDateTime.now(), false, user2, article));
-            commentRepository.save(new Comment("ale fajnie fajnie bardzo fajnie toale fajnie fajnie bardzo fajnie ale fajnie fajnie bardzo fajnie toale fajnie fajnie bardzo fajnie ale fajnie fajnie bardzo fajnie toale fajnie fajnie bardzo fajnie ale fajnie fajnie bardzo", LocalDateTime.now(), true, user2, article));
-
+            commentRepository.save(new Comment("no tak", LocalDateTime.now(), true, user2, article));
 
         };
     }
     // Settings Managment
-
-    // TODO: Setting's form : checking if user is still blocked
-    // Injection and write t xml
     // TODO: CommandLine to .sql
 }
