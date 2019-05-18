@@ -46,16 +46,16 @@ public class App {
             userGroupRepository.save(admin);
 
             userGroupRepository.save(new UserGroup("Użytkownicy", ""));
-            userGroupRepository.save(new UserGroup("Somsiady", null));
+            userGroupRepository.save(new UserGroup("Inni", null));
 
             User user = new User("root", passwordEncoder.encode("asd123"),
-                    "karol.cymerys@gmail.com", "Jan",
+                    "karol172@gmail.com", "Jan",
                     "Kowal", null, true,
                     userGroupRepository.findFirstByName("Administratorzy"));
             User user2 = new User("ro2ot", passwordEncoder.encode("asd123"),
                     "karol.cymerys@gmail2.com", "Jan",
                     "Kowal", null, true,
-                    userGroupRepository.findFirstByName("Somsiady"));
+                    userGroupRepository.findFirstByName("Inni"));
 
             categoryRepository.save(new Category("Drawing", ""));
             categoryRepository.save(new Category("2Drawing", ""));
@@ -83,15 +83,15 @@ public class App {
                     LocalDateTime.now(), LocalDateTime.now().minusYears(8),
                     true, true, categoryRepository.findByOrderByNameAsc().get(0));
 
-            Article article3 = new Article("Tytuł123", "Treść treścią2", null,
+            Article article3 = new Article("Tytuł1234", "Treść treścią2", null,
                     LocalDateTime.now(), LocalDateTime.now().minusYears(8),
                     true, true, categoryRepository.findByOrderByNameAsc().get(0));
 
-            Article article4 = new Article("Tytuł123", "Treść treścią2", null,
+            Article article4 = new Article("Tytuł1235", "Treść treścią2", null,
                     LocalDateTime.now(), LocalDateTime.now().minusYears(8),
                     true, true, categoryRepository.findByOrderByNameAsc().get(0));
 
-            Article article5 = new Article("Tytuł123", "Treść treścią2", null,
+            Article article5 = new Article("Tytuł1236", "Treść treścią2", null,
                     LocalDateTime.now(), LocalDateTime.now().minusYears(8),
                     true, true, categoryRepository.findByOrderByNameAsc().get(0));
 
@@ -113,5 +113,4 @@ public class App {
         };
     }
     // Settings Managment
-    // TODO: CommandLine to .sql
 }
